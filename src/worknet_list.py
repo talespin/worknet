@@ -147,12 +147,12 @@ params = {
     'regDateEndt': '',
     'staAreaLineInfo1': '11000',
     'staAreaLineInfo2': '1',
-    'pageIndex': '6',
+    'pageIndex': '1',
     'termContractMmcnt': '',
     'careerFrom': '',
     'laborHrShortYn': '',
 }
-pageIndex = 6
+pageIndex = 1
 total_page = 10
 result = []
 while True:
@@ -208,6 +208,7 @@ while True:
     pageIndex += 1
     params.update({'pageIndex':pageIndex})
     if pageIndex > total_page: break
+os.makedirs('../list', exist_ok=True)
 pd.DataFrame(result).to_excel('../list/worknet.list', index=False)    
 logging.info('worknet crawl list end:' + + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
