@@ -19,6 +19,7 @@ import os
 import sys
 import math
 import logging
+import pandas as pd
 import requests as req
 from time import sleep
 from datetime import datetime
@@ -157,8 +158,15 @@ total_page = 10
 result = []
 while True:
     logging.info(f'pageIndex={pageIndex} / {total_page}')
-    res = req.get(f'{base_url}/empInfo/empInfoSrch/list/dtlEmpSrchList.do', params=params, cookies=cookies, headers=headers)
-    doc = bs(res.content, 'html.parser')
+    if os.path.exists(f'../list/{pageIndex}'):
+        with open(f'../list/{pageIndex}','rb') as fs:
+            doc = bs(fs.read(), 'html.parser')
+    else:
+        sleep(5)
+        res = req.get(f'{base_url}/empInfo/empInfoSrch/list/dtlEmpSrchList.do', params=params, cookies=cookies, headers=headers)
+        with open(f'../list/{pageIndex}','wb') as fs:
+            fs.write(res.content)
+        doc = bs(res.content, 'html.parser')
     items = doc.find('table', {'class':'board-list'}).find('tbody').find_all('tr')
     for item in items:
         회사명, 채용공고처, 채용공고명, 지원자격, 지역, 근무조건, 등록_마감일 = '', '', '', '', '', '', ''
@@ -202,14 +210,13 @@ while True:
         except:
             pass
         result.append(dict(id=id, url=url, 회사명=회사명, 채용공고처=채용공고처, 채용공고명=채용공고명, 담당업무=담당업무, 지원자격=지원자격, 지역=지역, 근무조건=근무조건, 등록_마감일=등록_마감일))
-    sleep(5)
     total_cnt = int(doc.find_all('strong', {'class':'font-orange'})[-1].text.replace(',',''))
     total_page = math.ceil(total_cnt / 1000)
     pageIndex += 1
     params.update({'pageIndex':pageIndex})
     if pageIndex > total_page: break
 os.makedirs('../list', exist_ok=True)
-pd.DataFrame(result).to_excel('../list/worknet.list', index=False)    
+pd.DataFrame(result).to_excel('../list/worknet_list.xlsx', index=False)    
 logging.info('worknet crawl list end:' + + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 #if __name__=='__main__':
