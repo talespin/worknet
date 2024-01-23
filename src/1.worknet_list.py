@@ -164,8 +164,8 @@ while True:
     else:
         sleep(5)
         res = req.get(f'{base_url}/empInfo/empInfoSrch/list/dtlEmpSrchList.do', params=params, cookies=cookies, headers=headers)
-        with open(f'../list/{pageIndex}','wb') as fs:
-            fs.write(res.content)
+        with open(f'../list/{pageIndex}','wt', encoding='utf-8') as fs:
+            fs.write(res.content.decode('utf-8'))
         doc = bs(res.content, 'html.parser')
     items = doc.find('table', {'class':'board-list'}).find('tbody').find_all('tr')
     for item in items:
