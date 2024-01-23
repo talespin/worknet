@@ -31,7 +31,7 @@ def main():
         return
     page_cnt = math.ceil(len(df) / split_cnt)
     for cnt in range(0, split_cnt):
-        df[cnt *page_cnt:(cnt+1)*page_cnt].to_json(f'../list/worknet_{cnt+1}.json', orient='records', force_ascii=False, encoding='utf-8')
+        df[cnt *page_cnt:(cnt+1)*page_cnt].to_json(f'../list/worknet_{cnt+1}.json', orient='records', force_ascii=False)
 
 
 
