@@ -31,7 +31,7 @@ def worknet_crawler(list_file:str, overwrite:bool = False):
     if not os.path.exists(list_file):
         print('File not found:' + os.path.abspath(list_file))
         return
-    with open(list_file, 'rt') as fs:
+    with open(list_file, 'rt', encoding='utf-8') as fs:
         items = pd.read_json(fs.read()).to_dict('records')
     logging.info('worknet crawl list start:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     base_url = 'https://www.work.go.kr'
@@ -71,7 +71,9 @@ def worknet_crawler(list_file:str, overwrite:bool = False):
     for i, item in enumerate(items):
         logging.info(f"    crawl : {item['id']} ")
         file_name = f"../crawl/{item['id']}.html"
-        if os.path.exists(file_name) and overwrite==False: continue 
+        if os.path.exists(file_name) and overwrite==False:
+            print("    skip file")
+            continue 
         sleep(5)    
         res = req.get(item['url'], headers=headers)
         with open(file_name, 'wb') as fs:
