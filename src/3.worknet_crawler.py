@@ -70,7 +70,8 @@ def worknet_crawler(list_file:str, overwrite:bool = False):
     os.makedirs('../crawl', exist_ok=True)
     for i, item in enumerate(items):
         logging.info(f"    crawl : {item['id']} ")
-        file_name = f"../crawl/{item['id']}.html"
+        os.makedirs(f"../crawl/{item['id']}", exist_ok=True)
+        file_name = f"../crawl/{item['id']}/{item['id']}.html"
         if os.path.exists(file_name) and overwrite==False:
             print("    skip file")
             continue 
