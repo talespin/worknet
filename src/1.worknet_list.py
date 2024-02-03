@@ -27,6 +27,7 @@ from bs4 import BeautifulSoup as bs
 
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+logging.root.name = 'worknet_list'
 
 logging.info('worknet crawl list start:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 base_url = 'https://www.work.go.kr'
