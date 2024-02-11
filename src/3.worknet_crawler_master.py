@@ -25,7 +25,7 @@ def main():
     display = os.environ['DISPLAY']
     items = None
     lst = []
-    items = pd.read_excel('../list/worknet.xlsx').to_dict('records')
+    items = pd.read_excel('../list/worknet_list.xlsx').to_dict('records')
     for i, item in enumerate(items):
         id = item['id']
         if os.path.exists(f'../crawl/{id}/{id}.html'): continue
