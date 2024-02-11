@@ -54,7 +54,7 @@ def parser(id:str) -> None:
     for th, td in zip(ths, tds):
         _dct_careers.update({th.text.strip():td.text.strip()})
     result.update(_dct_careers)        
-    with open(f'../crawl/{id}/{id}.json', 'wt') as fs:
+    with open(json_file, 'wt') as fs:
         _ = fs.write(json.dumps(result).decode('utf-8'))
 
 
