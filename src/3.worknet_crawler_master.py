@@ -15,6 +15,8 @@
     worknet.xlxs 을 읽어서 crawler 서버에 크롤명령어를 전송한다.
 """
 import os
+import sys
+import logging
 import pandas as pd
 import orjson as json
 from multiprocessing import Pool
@@ -22,6 +24,7 @@ from time import sleep
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     display = os.environ['DISPLAY']
     items = None
     lst = []

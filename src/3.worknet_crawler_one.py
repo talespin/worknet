@@ -17,7 +17,7 @@
 """
 import os
 import sys
-import math
+import socket
 import logging
 import argparse
 import pandas as pd
@@ -75,6 +75,7 @@ def worknet_crawler_one(id:str, url:str):
 
 if __name__=='__main__':
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    logging.root.name = 'crawler:' + socket.gethostname()
     parser = argparse.ArgumentParser(
         prog='jobkorea crawler',
         description='jobkorea 구인목록을 크롤합니다.')
