@@ -47,6 +47,7 @@ def worknet_crawler_one(id:str, url:str):
         'sortField': 'DATE',
         'sortOrderBy': 'DESC',
         'resultCnt': '1000',
+
         'hisListView': 'DTL',
     }
     headers = {
@@ -75,13 +76,14 @@ def worknet_crawler_one(id:str, url:str):
 
 if __name__=='__main__':
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    logging.root.name = 'crawler:' + socket.gethostname()
+    logging.root.name = 'worknet_crawl_one:' + socket.gethostname()
     parser = argparse.ArgumentParser(
         prog='jobkorea crawler',
         description='jobkorea 구인목록을 크롤합니다.')
     parser.add_argument('-i', '--id')
     parser.add_argument('-u', '--url')
     parser.add_argument('-d', '--display')
+
     args = parser.parse_args()
     os.environ['DISPLAY'] = args.display
     worknet_crawler_one(args.id, args.url)
