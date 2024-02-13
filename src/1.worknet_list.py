@@ -224,7 +224,7 @@ def worknet_list():
         if pageIndex > total_page: break
     os.makedirs('../list', exist_ok=True)
     pd.DataFrame(result).to_excel('../list/worknet_list.xlsx', index=False)    
-    logging.info('worknet crawl list end:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    logging.info(f"worknet crawl list end:{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 
 if __name__=='__main__':
