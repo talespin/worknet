@@ -36,6 +36,8 @@ def main():
         url = item['url']
         pgm = f'rsh crawler{server} \'export DISPLAY={os.environ["DISPLAY"]};cd /mnt/work/worknet/src;/usr/share/python-3.11/bin/python 3.worknet_crawler_one.py -i {id} -u "{url}" -d "{display}"\''
         lst.append(pgm)
+    print(f'total count:{len(items)},  exists count:{len(items) - len(lst)}, target count:{len(lst)}')
+    print(f'crawl start')
     pool = Pool(10)
     pool.map_async(subprocess, lst)
     pool.close()
