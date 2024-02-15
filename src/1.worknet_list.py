@@ -19,6 +19,7 @@ import os
 import sys
 import math
 import logging
+import argparse
 import pandas as pd
 from glob import glob
 import requests as req
@@ -27,14 +28,15 @@ from datetime import datetime
 from bs4 import BeautifulSoup as bs
 
 
-def worknet_list():
+def worknet_list(is_yes):
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     logging.root.name = 'worknet_list'
     ip = None
     while True:
+        if is_yes: break     
         ip = input('>>>크롤작업을 새로 시작하려면 Y  이어서 하려면 N 를 입력하세요\n')
         if ip in ['Y','N']: break
-    if ip == 'Y': [os.remove(x) for x in glob('../list/*')]
+    if ip == 'Y' or is_yes: [os.remove(x) for x in glob('../list/*')]
     logging.info('worknet crawl list start:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     base_url = 'https://www.work.go.kr'
     cookies = {
@@ -229,4 +231,7 @@ def worknet_list():
 
 
 if __name__=='__main__':
-    worknet_list()
+    parser = argparse.ArgumentParser(prog='jobkorea list crawle', description='worknet 리스트를 크롤합니다') 
+    parser.add_argument('-y')
+    args = parser.parse_args()
+    worknet_list(args.y)
