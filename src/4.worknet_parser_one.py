@@ -60,7 +60,7 @@ def parser(id:str) -> None:
         with open(json_file, 'wt') as fs:
             _ = fs.write(json.dumps(result).decode('utf-8'))
     except Exception as e:
-        logging.error(str(e))	
+        logging.error(file_name + ':' + str(e))	
 
 
 def main():
