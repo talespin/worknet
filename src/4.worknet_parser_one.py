@@ -35,24 +35,26 @@ def parser(id:str) -> None:
     result = dict(id=id)
     with open(file_name, 'rt', encoding='utf-8') as fs:
         doc = bs(fs.read(), 'html.parser')
-    job_tile = doc.find('p', {'class':'tit'}).text.strip()
-    result.update(dict(title=title))
-    _summary = doc.find('div', {'class':'info'}).find_all('li')
+    job_title = doc.find('p', {'class':'tit'}).text.strip()
+    result.update(dict(title=job_title))
+    _summarys = doc.find('div', {'class':'info'}).find_all('li')
     dct_summary = {}
-    for dt, dd in zip(_summary.find('strong'), _summary.find('span')):
-        dct_summary.update({'summary:'+dt.text.strip():dd.text.strip()})
+    for _summary in _summarys:
+        for dt, dd in zip(_summary.find('strong'), _summary.find('span')):
+            dct_summary.update({'summary:'+dt.text.strip():dd.text.strip()})
     result.update(dct_summary)
-    _jv_cont = doc.find('div', {'class':'right'}).find('div', {'class':'info'}).find_all('li')
+    _jv_conts = doc.find('div', {'class':'right'}).find('div', {'class':'info'}).find_all('li')
     dct_company = {}
-    for dt, dd in zip(_summary.find('strong'), _summary.find('div')):
-        dct_company.update({'company:'+dt.text.strip():dd.text.strip()})
+    for _jv_cont in _jv_conts:
+        for dt, dd in zip(_jv_cont.find('strong'), _jv_cont.find('div')):
+            dct_company.update({'company:'+dt.text.strip():dd.text.strip()})
     result.update(dct_company)
-    result.update({doc.find('div', {'class':'careers-table'}).find('thead').text.strip(): doc.find('div', {'class':'careers-table'}).find('tbody').text.strip()})
+    result.update({doc.find('div', {'class':'careers-table'}).find('thead').text.strip(): doc.find('div', {'class':'careers-table'}).find('tbody').text.replace('\xa0','').strip()})
     _dct_careers = {}  
     ths = doc.find('div', {'class':'careers-table v1 center mt20'}).find('thead').find_all('th')
     tds = doc.find('div', {'class':'careers-table v1 center mt20'}).find('tbody').find_all('td')
     for th, td in zip(ths, tds):
-        _dct_careers.update({th.text.strip():td.text.strip()})
+        _dct_careers.update({th.text.replace("\xa0","").strip():td.text.replace("\xa0","").strip()})
     result.update(_dct_careers)        
     with open(json_file, 'wt') as fs:
         _ = fs.write(json.dumps(result).decode('utf-8'))
@@ -60,7 +62,7 @@ def parser(id:str) -> None:
 
 def main():
     logging.info('start parse html')
-    logging.info(datetime.now())
+    logging.info(datetime.now())c
     ids = [os.path.basename(x) for x in glob('../crawl/*')]
     pool = Pool(4)
     pool.map_async(parser, ids)
