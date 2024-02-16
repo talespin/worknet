@@ -62,7 +62,7 @@ def parser(id:str) -> None:
 
 def main():
     logging.info('start parse html')
-    logging.info(datetime.now())c
+    logging.info(datetime.now())
     ids = [os.path.basename(x) for x in glob('../crawl/*')]
     pool = Pool(4)
     pool.map_async(parser, ids)
