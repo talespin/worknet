@@ -60,7 +60,36 @@ def parser(id:str) -> None:
         with open(json_file, 'wt') as fs:
             _ = fs.write(json.dumps(result).decode('utf-8'))
     except Exception as e:
-        logging.error(file_name + ':' + str(e))	
+        logging.error(str(e))	
+
+
+def parse_jobkorea(id:str):
+    try:
+        file_name = f'../crawl/{id}/{id}.html'
+        if not os.path.exists(file_name): return
+        json_file = f'../result/{id}.json'
+        if os.path.exists(json_file): return
+        doc = None
+        result = dict(id=id)
+        with open(file_name, 'rt', encoding='utf-8') as fs:
+            doc = bs(fs.read(), 'html.parser')
+        careers_private = doc.find('div', {'class':'careers-private'})
+        company_name = careers_private.find('p', {'class':'name'}).text.strip()
+        job_title = careers_private.find('p', {'class':'title'}).text.strip()
+        result.update(dict(title=job_title, company_name=company_name))
+        careers_tables = doc.find_all('div', {'class':'careers-table'})
+        _dict_career = {}
+        for careers_table in careers_tables:
+            tables = careers_table.find_all('table')
+            for table in tables:
+                ths = table.find('tbody').find_all('th')
+                tds = table.find('tbody').find_all('td')
+                for th, td in zip(ths, tds):
+                    _dict_career.update({th.text.strip():td.text.strip()})
+        result.update(_dict_career)
+        with open(json_file, 'wt') as fs:
+            _ = fs.write(json.dumps(result).decode('utf-8'))
+
 
 
 def main():
@@ -72,6 +101,11 @@ def main():
     pool.map_async(parser, ids)
     pool.close()
     pool.join()
+    pool = Pool(4)
+    pool.map_async(parser, ids)
+    pool.close()
+    pool.join()
+    parse_jobkorea	
     logging.info('end parse html')
     logging.info(datetime.now())
 
