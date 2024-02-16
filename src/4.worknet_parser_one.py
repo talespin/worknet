@@ -89,6 +89,8 @@ def parse_jobkorea(id:str):
         result.update(_dict_career)
         with open(json_file, 'wt') as fs:
             _ = fs.write(json.dumps(result).decode('utf-8'))
+    except Exception as e:
+        logging.error(str(e))	
 
 
 
