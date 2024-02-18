@@ -12,5 +12,6 @@ for file_name in glob('../result/*.json'):
         print(f'parse error:{file_name}')
 
 df = pd.DataFrame(result)
-df.to_csv('../result/worknet.csv', encoding='cp949')
+#df.to_csv('../result/worknet.csv', encoding='cp949')
+df.to_csv('../result/worknet.csv')
 df.to_excel('../result/worknet.xlsx')

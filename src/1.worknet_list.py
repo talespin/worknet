@@ -173,6 +173,7 @@ def worknet_list(is_yes):
         else:
             sleep(5)
             res = req.get(f'{base_url}/empInfo/empInfoSrch/list/dtlEmpSrchList.do', params=params, cookies=cookies, headers=headers)
+            print(file_name)
             with open(file_name,'wt', encoding='utf-8') as fs:
                 fs.write(res.content.decode('utf-8'))
             doc = bs(res.content, 'html.parser')
