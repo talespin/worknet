@@ -1,1 +1,4 @@
-crawl
+crawl/*
+log/*
+result/*
+list/*
