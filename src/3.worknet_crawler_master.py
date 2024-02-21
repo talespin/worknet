@@ -33,7 +33,7 @@ def main():
     for i, item in enumerate(items):
         id = item['id']
         if os.path.exists(f'../crawl/{id}/{id}.html'): continue
-        server = (i % 5) +1
+        server = (i % 7) +1
         url = item['url']
         pgm = f'rsh crawler{server} \'export DISPLAY={os.environ["DISPLAY"]};cd /mnt/work/worknet/src;/usr/share/python-3.11/bin/python 3.worknet_crawler_one.py -i {id} -u "{url}" -d "{display}"\''
         lst.append(pgm)
