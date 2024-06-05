@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import orjson as json
 from glob import glob
@@ -11,7 +12,7 @@ for file_name in glob('../result/*.json'):
     except:
         print(f'parse error:{file_name}')
 
+os.makedirs('../result', exists_ok=True)
 df = pd.DataFrame(result)
-#df.to_csv('../result/worknet.csv', encoding='cp949')
-df.to_csv('../result/worknet.csv')
+df.to_csv('../result/worknet.csv', encoding='cp949')
 df.to_excel('../result/worknet.xlsx')
