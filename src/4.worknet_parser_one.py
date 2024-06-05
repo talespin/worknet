@@ -24,6 +24,7 @@ import pandas as pd
 from glob import glob
 from lxml import etree
 from bs4 import BeautifulSoup as bs
+import multiprocessing as mp
 
 
 def get_jobkorea_채용명(doc):#*
@@ -208,114 +209,116 @@ def get_seoul_채용기업의산업(dom):
 
 def main(clear=False):
     crawl_list = [os.path.basename(x) for x in glob('../crawl/*')]
-    for id in crawl_list:
-        json_file = f'../parsed/{id}.json'
-        if clear == False and os.path.exists(json_file): continue
-        if not os.path.exists(f'../crawl/{id}/{id}.html'): continue		
-        with open(f'../crawl/{id}/{id}.html', 'rt', encoding='utf-8') as fs:
-            doc = bs(fs.read(), 'html.parser')
-            dom = etree.HTML(str(doc))
-            if dom is None: continue
-            if len(doc.text.strip()) < 10: continue
-        #print(id)
-        info_supply = [x for x in doc.find_all('strong') if x.text.strip() == '정보제공처'][0].parent.text.strip()
-        #print('[' , info_supply.strip(), ']')
-        #print(id, end=' ')
-        ID = id
-        채용명, 업체명, 상세모집분야, 근무형태, 임금형태, 최소학력, 급여, 경력, 근무지역, 연관직무, 우대사항, 요구자격증, 핵심역량, 채용직급, 채용인원, 채용기업의산업 = '','','','','','','','','','','','','','','',''
-        if info_supply.find('서울시') >= 0:
-            pass		
-            채용명 = get_seoul_채용명(dom)
-            업체명 = get_seoul_업체명(dom)
-            상세모집분야 = get_seoul_상세모집분야(dom)
-            근무형태 = get_seoul_근무형태(dom)
-            임금형태 = get_seoul_임금형태(dom)
-            최소학력 = get_seoul_최소학력(dom)
-            급여 = get_jobkorea_급여(doc)
-            경력 = get_seoul_경력(dom)
-            근무지역 = get_jobkorea_근무지역(dom)
-            연관직무 = get_jobkorea_연관직무(dom)
-            우대사항 = get_jobkorea_우대사항(doc)
-            요구자격증 = get_jobkorea_요구자격증(dom)
-            핵심역량 = get_jobkorea_핵심역량(dom)
-            채용직급 = get_jobkorea_채용직급(doc)
-            채용인원 = get_jobkorea_채용인원(dom)
-            채용기업의산업 = get_seoul_채용기업의산업(dom)
-        elif info_supply.find('인크루트') >= 0:
-            print(id)
-            채용명 = get_jobkorea_채용명(doc)
-            업체명 = get_jobkorea_업체명(doc)
-            상세모집분야 = get_jobkorea_상세모집분야(dom)
-            근무형태 = get_jobkorea_근무형태(doc)
-            임금형태 = get_jobkorea_임금형태(doc)
-            최소학력 = get_jobkorea_최소학력(dom)
-            급여 = get_jobkorea_급여(doc)
-            경력 = get_jobkorea_경력(dom)
-            근무지역 = get_jobkorea_근무지역(dom)
-            연관직무 = get_jobkorea_연관직무(dom)
-            우대사항 = get_jobkorea_우대사항(doc)
-            요구자격증 = get_jobkorea_요구자격증(dom)
-            핵심역량 = get_jobkorea_핵심역량(dom)
-            채용직급 = get_jobkorea_채용직급(doc)
-            채용인원 = get_jobkorea_채용인원(dom)
-            채용기업의산업 = get_jobkorea_채용기업의산업(doc)			
-        elif info_supply.find('잡코리아') >= 0:
-            pass
-            채용명 = get_jobkorea_채용명(doc)
-            업체명 = get_jobkorea_업체명(doc)
-            상세모집분야 = get_jobkorea_상세모집분야(dom)
-            근무형태 = get_jobkorea_근무형태(doc)
-            임금형태 = get_jobkorea_임금형태(doc)
-            최소학력 = get_jobkorea_최소학력(dom)
-            급여 = get_jobkorea_급여(doc)
-            경력 = get_jobkorea_경력(dom)
-            근무지역 = get_jobkorea_근무지역(dom)
-            연관직무 = get_jobkorea_연관직무(dom)
-            우대사항 = get_jobkorea_우대사항(doc)
-            요구자격증 = get_jobkorea_요구자격증(dom)
-            핵심역량 = get_jobkorea_핵심역량(dom)
-            채용직급 = get_jobkorea_채용직급(doc)
-            채용인원 = get_jobkorea_채용인원(dom)
-            채용기업의산업 = get_jobkorea_채용기업의산업(doc)
-        elif info_supply.find('사람인') >= 0:
-            pass
-            채용명 = get_jobkorea_채용명(doc)
-            업체명 = get_jobkorea_업체명(doc)
-            상세모집분야 = get_jobkorea_상세모집분야(dom)
-            근무형태 = get_jobkorea_근무형태(doc)
-            임금형태 = get_jobkorea_임금형태(doc)
-            최소학력 = get_jobkorea_최소학력(dom)
-            급여 = get_jobkorea_급여(doc)
-            경력 = get_jobkorea_경력(dom)
-            근무지역 = get_jobkorea_근무지역(dom)
-            연관직무 = get_jobkorea_연관직무(dom)
-            우대사항 = get_jobkorea_우대사항(doc)
-            요구자격증 = get_jobkorea_요구자격증(dom)
-            핵심역량 = get_jobkorea_핵심역량(dom)
-            채용직급 = get_jobkorea_채용직급(doc)
-            채용인원 = get_jobkorea_채용인원(dom)
-            채용기업의산업 = get_jobkorea_채용기업의산업(doc)
-        elif info_supply.find('워크넷') >= 0:
-            pass
-            채용명 = get_worknet_채용명(doc)
-            업체명 = get_worknet_업체명(dom)
-            상세모집분야 = get_worknet_상세모집분야(dom)
-            근무형태 = get_worknet_근무형태(dom)
-            임금형태 = get_worknet_임금형태(dom)
-            최소학력 = get_worknet_최소학력(dom)
-            급여 = get_jobkorea_급여(doc)
-            경력 = get_worknet_경력(dom)
-            근무지역 = get_jobkorea_근무지역(dom)
-            연관직무 = get_jobkorea_연관직무(dom)
-            우대사항 = get_jobkorea_우대사항(doc)
-            요구자격증 = get_jobkorea_요구자격증(dom)
-            핵심역량 = get_jobkorea_핵심역량(dom)
-            채용직급 = get_jobkorea_채용직급(doc)
-            채용인원 = get_jobkorea_채용인원(dom)
-            채용기업의산업 = get_jobkorea_채용기업의산업(doc)
-        data = dict(ID=ID, 채용명=채용명, 업체명=업체명, 상세모집분야=상세모집분야, 근무형태=근무형태, 임금형태=임금형태, 최소학력=최소학력, 급여=급여, 경력=경력, 근무지역=근무지역, 연관직무=연관직무, 우대사항=우대사항, 요구자격증=요구자격증, 핵심역량=핵심역량, 채용직급=채용직급, 채용인원=채용인원, 채용기업의산업=채용기업의산업)
-        with open(json_file, 'wt', encoding='utf-8') as fs:
-            _ = fs.write(json.dumps(data, ensure_ascii=False))	
+    os.makedirs('../parsed', exist_ok=True)
+    pool = mp.Pool(5)#CPU 갯수-1 개 정도로 돌리면됩니다.
+    pool.map(sub, crawl_list)
+    pool.close()
+    pool.close()
+
+
+def sub(id):    
+    json_file = f'../parsed/{id}.json'
+    if os.path.exists(json_file): return
+    if not os.path.exists(f'../crawl/{id}/{id}.html'): return
+    with open(f'../crawl/{id}/{id}.html', 'rt', encoding='utf-8') as fs:
+        doc = bs(fs.read(), 'html.parser')
+        dom = etree.HTML(str(doc))
+        if dom is None: return
+        if len(doc.text.strip()) < 10: return
+    #print(id)
+    info_supply = [x for x in doc.find_all('strong') if x.text.strip() == '정보제공처'][0].parent.text.strip()
+    #print('[' , info_supply.strip(), ']')
+    #print(id, end=' ')
+    ID = id
+    채용명, 업체명, 상세모집분야, 근무형태, 임금형태, 최소학력, 급여, 경력, 근무지역, 연관직무, 우대사항, 요구자격증, 핵심역량, 채용직급, 채용인원, 채용기업의산업 = '','','','','','','','','','','','','','','',''
+    if info_supply.find('서울시') >= 0:
+        채용명 = get_seoul_채용명(dom)
+        업체명 = get_seoul_업체명(dom)
+        상세모집분야 = get_seoul_상세모집분야(dom)
+        근무형태 = get_seoul_근무형태(dom)
+        임금형태 = get_seoul_임금형태(dom)
+        최소학력 = get_seoul_최소학력(dom)
+        급여 = get_jobkorea_급여(doc)
+        경력 = get_seoul_경력(dom)
+        근무지역 = get_jobkorea_근무지역(dom)
+        연관직무 = get_jobkorea_연관직무(dom)
+        우대사항 = get_jobkorea_우대사항(doc)
+        요구자격증 = get_jobkorea_요구자격증(dom)
+        핵심역량 = get_jobkorea_핵심역량(dom)
+        채용직급 = get_jobkorea_채용직급(doc)
+        채용인원 = get_jobkorea_채용인원(dom)
+        채용기업의산업 = get_seoul_채용기업의산업(dom)
+    elif info_supply.find('인크루트') >= 0:
+        채용명 = get_jobkorea_채용명(doc)
+        업체명 = get_jobkorea_업체명(doc)
+        상세모집분야 = get_jobkorea_상세모집분야(dom)
+        근무형태 = get_jobkorea_근무형태(doc)
+        임금형태 = get_jobkorea_임금형태(doc)
+        최소학력 = get_jobkorea_최소학력(dom)
+        급여 = get_jobkorea_급여(doc)
+        경력 = get_jobkorea_경력(dom)
+        근무지역 = get_jobkorea_근무지역(dom)
+        연관직무 = get_jobkorea_연관직무(dom)
+        우대사항 = get_jobkorea_우대사항(doc)
+        요구자격증 = get_jobkorea_요구자격증(dom)
+        핵심역량 = get_jobkorea_핵심역량(dom)
+        채용직급 = get_jobkorea_채용직급(doc)
+        채용인원 = get_jobkorea_채용인원(dom)
+        채용기업의산업 = get_jobkorea_채용기업의산업(doc)			
+    elif info_supply.find('잡코리아') >= 0:
+        채용명 = get_jobkorea_채용명(doc)
+        업체명 = get_jobkorea_업체명(doc)
+        상세모집분야 = get_jobkorea_상세모집분야(dom)
+        근무형태 = get_jobkorea_근무형태(doc)
+        임금형태 = get_jobkorea_임금형태(doc)
+        최소학력 = get_jobkorea_최소학력(dom)
+        급여 = get_jobkorea_급여(doc)
+        경력 = get_jobkorea_경력(dom)
+        근무지역 = get_jobkorea_근무지역(dom)
+        연관직무 = get_jobkorea_연관직무(dom)
+        우대사항 = get_jobkorea_우대사항(doc)
+        요구자격증 = get_jobkorea_요구자격증(dom)
+        핵심역량 = get_jobkorea_핵심역량(dom)
+        채용직급 = get_jobkorea_채용직급(doc)
+        채용인원 = get_jobkorea_채용인원(dom)
+        채용기업의산업 = get_jobkorea_채용기업의산업(doc)
+    elif info_supply.find('사람인') >= 0:
+        채용명 = get_jobkorea_채용명(doc)
+        업체명 = get_jobkorea_업체명(doc)
+        상세모집분야 = get_jobkorea_상세모집분야(dom)
+        근무형태 = get_jobkorea_근무형태(doc)
+        임금형태 = get_jobkorea_임금형태(doc)
+        최소학력 = get_jobkorea_최소학력(dom)
+        급여 = get_jobkorea_급여(doc)
+        경력 = get_jobkorea_경력(dom)
+        근무지역 = get_jobkorea_근무지역(dom)
+        연관직무 = get_jobkorea_연관직무(dom)
+        우대사항 = get_jobkorea_우대사항(doc)
+        요구자격증 = get_jobkorea_요구자격증(dom)
+        핵심역량 = get_jobkorea_핵심역량(dom)
+        채용직급 = get_jobkorea_채용직급(doc)
+        채용인원 = get_jobkorea_채용인원(dom)
+        채용기업의산업 = get_jobkorea_채용기업의산업(doc)
+    elif info_supply.find('워크넷') >= 0:
+        채용명 = get_worknet_채용명(doc)
+        업체명 = get_worknet_업체명(dom)
+        상세모집분야 = get_worknet_상세모집분야(dom)
+        근무형태 = get_worknet_근무형태(dom)
+        임금형태 = get_worknet_임금형태(dom)
+        최소학력 = get_worknet_최소학력(dom)
+        급여 = get_jobkorea_급여(doc)
+        경력 = get_worknet_경력(dom)
+        근무지역 = get_jobkorea_근무지역(dom)
+        연관직무 = get_jobkorea_연관직무(dom)
+        우대사항 = get_jobkorea_우대사항(doc)
+        요구자격증 = get_jobkorea_요구자격증(dom)
+        핵심역량 = get_jobkorea_핵심역량(dom)
+        채용직급 = get_jobkorea_채용직급(doc)
+        채용인원 = get_jobkorea_채용인원(dom)
+        채용기업의산업 = get_jobkorea_채용기업의산업(doc)
+    data = dict(ID=ID, 채용명=채용명, 업체명=업체명, 상세모집분야=상세모집분야, 근무형태=근무형태, 임금형태=임금형태, 최소학력=최소학력, 급여=급여, 경력=경력, 근무지역=근무지역, 연관직무=연관직무, 우대사항=우대사항, 요구자격증=요구자격증, 핵심역량=핵심역량, 채용직급=채용직급, 채용인원=채용인원, 채용기업의산업=채용기업의산업)
+    with open(json_file, 'wt', encoding='utf-8') as fs:
+        _ = fs.write(json.dumps(data, ensure_ascii=False))	
 
 
 if __name__=='__main__':
